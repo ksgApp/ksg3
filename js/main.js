@@ -1,6 +1,6 @@
 enchant();
 window.onload = function() {
- var game = new Game(320,480); //ゲーム準備、表示領域
+ var game = new Game(320,480); //ゲーム準備、表示領域.
  var scale_h = window.innerHeight/480;
  var scale_w = window.innerWidth/320;
  if(scale_h >= scale_w){
