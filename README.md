@@ -1,6 +1,6 @@
-# リポジトリ：ksg1
+# リポジトリ：ksg3
 
-## 説明：クソゲー作成～その１
-
+## 説明：クソゲー作成～その3
+ver 1.0.0
 ## 公開URL
-https://ksgapp.github.io/ksg1/
+https://ksgapp.github.io/ksg3/
