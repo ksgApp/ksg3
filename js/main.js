@@ -14,6 +14,8 @@ window.onload = function() {
  game.preload('./img/fire.jpg');
  game.preload('./img/heaven.jpg');
  game.preload('./img/hell1.jpg');
+ game.preload('./img/s2.png');
+ game.preload('./img/baby.png');
  
  
  game.fps = 30;
@@ -91,8 +93,19 @@ window.onload = function() {
 	player.frame = 0;
 	player.scale(0.5,0.5);
 	scene.addChild(player);
+
+	//怪盗出現前
+	var sheef = new Sprite(512, 512);
+	sheef.image = game.assets['./img/s2.png'];
+	sheef.x = -50;
+	sheef.y = 80
+	sheef.frame = 0;
+	sheef.scale(0.5,0.5);
+	sheef.opacity = 0.0;
+	scene.addChild(sheef);
 	
 	var move = 0;
+	var framecount = 0;
 
 	//毎フレームイベント
 	scene.addEventListener(Event.ENTER_FRAME, function() {
@@ -102,57 +115,65 @@ window.onload = function() {
 	
 		if (trycount <= 0){	//クリアタップ数
 			//console.log(sec);
+			player.frame = 3;
 			finishgame(sec);
 		}
 	
-		
-		ase = Math.round(asecount -sec * 3);	
-		labela.text = '汗：'+ase;
-		//console.log(ase);
+		else{
+			ase = Math.round(asecount -sec * 3);	
+			labela.text = '汗：'+ase;
+			//console.log(ase);
 
-		if (ase >= 50){	//汗
+			if (ase >= 50){	//汗
+			//console.log(asecount);
+				asecount = 999;
+				labela.color = '#f11';
+				labela.text = '紙エプロンが破れる！！！';
+				//player.frame = 10;
+				player.frame += 0.2;
+
+				if(player.frame >=12){
+					player.frame = 12;
+				sh();
+				}
+			}
+
+			if(move == 1){
+				if(player.frame <2.8){
+				  player.frame += 0.3;
+				}
+				else{
+					player.frame = 0;
+					move = 0;
+				}		
+		  	} 
+			else if(move == 2){
+				if(player.frame <4){
+					player.frame = 4;
+				}
+				if(player.frame <5.8){
+			  	player.frame += 0.3;
+				}
+				else{
+					player.frame = 4;
+					move = 0;
+				}	
+			}
+			else if(move == 3){
+				if(player.frame <7){
+					player.frame = 7;
+				}
+				if(player.frame <8.8){
+				  player.frame += 0.3;
+				}
+				else{
+					player.frame = 7
+					move = 0;
+				}	
+			}
+		}
+		//console.log(player.frame);
 		//console.log(asecount);
-			stopgame();
-		}
-
-		// if(move = 0){
-		// 	player.frame = 0;
-		// }
-	//console.log(move);
-		if(move == 1){
-			if(player.frame <2.8){
-			  player.frame += 0.3;
-			}
-			else{
-				player.frame = 0;
-				move = 0;
-			}		
-		  } 
-		else if(move == 2){
-			if(player.frame <4){
-				player.frame = 4;
-			}
-			if(player.frame <5.8){
-			  player.frame += 0.3;
-			}
-			else{
-				player.frame = 4;
-				move = 0;
-			}	
-		}
-		else if(move == 3){
-			if(player.frame <7){
-				player.frame = 7;
-			}
-			if(player.frame <8.8){
-			  player.frame += 0.3;
-			}
-			else{
-				player.frame = 7
-				move = 0;
-			}	
-		}
-
 	});
 
 	scene.addEventListener(Event.TOUCH_START, function() {　//画面タッチ処理）
@@ -162,8 +183,8 @@ window.onload = function() {
 
 		asecount = Math.random()*5 + asecount;
 		
-		console.log(ase);
-		console.log(move);
+		//console.log(ase);
+		//console.log(move);
 		if(ase <15){
 			move = 1;
 		}
@@ -178,9 +199,26 @@ window.onload = function() {
 
 
 	var finishgame = function(s) {	//完食してゲーム終了	
-	game.replaceScene(createGameoverScene(s));
+		//player.frame = 3.0;
+		//console.log(player.frame);
+		player.tl.moveBy(0,-600,60);
+		framecount ++;
+		if(framecount == 60){
+			game.replaceScene(createGameoverScene(s));
+		}
 	} 
 	
+	var sh = function() {	//ゲーム失敗
+		player.tl.fadeOut(30);
+		sheef.tl.fadeIn(60);
+		sheef.tl.and();
+		sheef.tl.rotateBy(1120,60);
+		framecount ++;
+		if (framecount == 60){
+		stopgame();
+		}
+		} 
+
 	var stopgame = function() {	//ゲーム失敗
 	alert("紙エプロンを粗末にするな！！！！");
 	game.replaceScene(createTitleScene());
@@ -200,6 +238,13 @@ var createGameoverScene = function(resultscore) {
 	last.x = 0;	//背景の配置
 	last.y = 0;
 	scene.addChild(last);
+
+	var baby = new Sprite(400, 416);	//背景生成
+	baby.image = game.assets['./img/baby.png'];	//背景画像設定
+	baby.x = 0;	//背景の配置
+	baby.y = 240;
+
+	scene.addChild(baby);
 
 	var label = new Label(resultscore+'秒で食べきった!');
 	label.textAlign = 'center';
